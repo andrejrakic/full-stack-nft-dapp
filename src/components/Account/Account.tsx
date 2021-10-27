@@ -15,7 +15,6 @@ export default function Account() {
 		const isEns = async () => {
 			if (account && library) {
 				const _ens = await library?.lookupAddress(account);
-				console.log(_ens);
 				setEns(_ens);
 			}
 		};
@@ -35,7 +34,10 @@ export default function Account() {
 		<div>
 			<Counter transaction={newTransaction} />
 			{!account ? (
+				<>
 				<Button text='Connect Wallet' onClick={activateBrowserWallet} />
+				<p>Ensure that you are connected to Rinkeby network</p>
+				</>
 			) : (
 				<>
 					<p className='text'>Connected: {formatAddress()}</p>
