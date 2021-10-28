@@ -3,8 +3,8 @@ import { JsonRpcSigner } from '@ethersproject/providers';
 import { getExplorerTransactionLink, useEthers } from '@usedapp/core';
 import useContract from '../../hooks/useContract';
 import { NFT_ADDRESSES } from '../../constants/addresses';
-import ABI from '../../abis/NFT.abi.json';
-import { NFTAbi } from '../../abis/types';
+import ABI from '../../abis/DungeonsAndDragonsCharacter.abi.json';
+import { DungeonsAndDragonsCharacterAbi } from '../../abis/types';
 import Button from '../Button/Button';
 import image from '../../assets/images/dungeons-and-dragons.jpeg';
 import './Mint.css';
@@ -14,16 +14,21 @@ interface MintProps {
 }
 
 export default function Mint(props: MintProps) {
-	const contract = useContract<NFTAbi>(NFT_ADDRESSES, ABI);
+	const contract = useContract<DungeonsAndDragonsCharacterAbi>(
+		NFT_ADDRESSES,
+		ABI
+	);
 	const [isDisabled, setIsDisabled] = useState<boolean>(false);
 	const [txHash, setTxHash] = useState<string | undefined>(undefined);
-	const { account, library, chainId } = useEthers();
+	const { library, chainId } = useEthers();
 
-	const mint = async (address: string) => {
+	const mint = async (name: string) => {
 		const signer: JsonRpcSigner | undefined = library?.getSigner();
 
 		if (signer) {
-			const tx = await contract?.connect(signer).safeMint(address);
+			const tx = await contract
+				?.connect(signer)
+				.requestNewRandomCharacter(name);
 
 			if (chainId && tx) {
 				setIsDisabled(true);
@@ -45,7 +50,7 @@ export default function Mint(props: MintProps) {
 			<Button
 				text='Mint NFT'
 				onClick={mint}
-				onClickParams={account}
+				onClickParams={'Elf'}
 				isDisabled={isDisabled}
 			/>
 			<div>

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { NFTAbi } from '../../abis/types';
+import { DungeonsAndDragonsCharacterAbi } from '../../abis/types';
 import { BigNumber } from '@ethersproject/bignumber';
 import { NFT_ADDRESSES } from '../../constants/addresses';
-import ABI from '../../abis/NFT.abi.json';
+import ABI from '../../abis/DungeonsAndDragonsCharacter.abi.json';
 import useContract from '../../hooks/useContract';
 
 interface CounterProps {
@@ -10,30 +10,30 @@ interface CounterProps {
 }
 
 export default function Counter(props: CounterProps) {
-	const contract = useContract<NFTAbi>(NFT_ADDRESSES, ABI);
-	const [cap, setCap] = useState<number | null>(null);
-	const [mintedSoFar, setMintedSoFar] = useState<number | null>(null);
+	const contract = useContract<DungeonsAndDragonsCharacterAbi>(
+		NFT_ADDRESSES,
+		ABI
+	);
+	const [numberOfCharacters, setNumberOfCharacters] = useState<number | null>(
+		null
+	);
 
 	useEffect(() => {
-		const getRatio = async () => {
+		const getNumberOfCharacters = async () => {
 			if (!!contract) {
-				const _cap: BigNumber = await contract.cap();
-				setCap(_cap.toNumber());
-
-				const _mintedSoFar: BigNumber = await contract.tokenIdCounter();
-				setMintedSoFar(_mintedSoFar.toNumber());
+				const _numberOfCharacters: BigNumber =
+					await contract.getNumberOfCharacters();
+				setNumberOfCharacters(_numberOfCharacters.toNumber());
 			}
 		};
 
-		getRatio();
+		getNumberOfCharacters();
 	}, [contract, props.transaction]);
 
 	return (
 		<div>
-			{(!!cap || !!mintedSoFar) && (
-				<p className='text'>
-					NFTs minted: {mintedSoFar}/{cap}
-				</p>
+			{!!numberOfCharacters && (
+				<p className='text'>Number of characters: {numberOfCharacters}</p>
 			)}
 		</div>
 	);
