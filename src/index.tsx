@@ -5,10 +5,13 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ChainId, Config, DAppProvider } from '@usedapp/core';
 
+const alchemyKey: string =
+	process.env.REACT_APP_ALCHEMY_KEY || `your alchemy key`;
+
 const config: Config = {
 	readOnlyChainId: ChainId.Rinkeby,
 	readOnlyUrls: {
-		[ChainId.Rinkeby]: `https://eth-rinkeby.alchemyapi.io/v2/${process.env.REACT_APP_ALCHEMY_KEY}`,
+		[ChainId.Rinkeby]: `https://eth-rinkeby.alchemyapi.io/v2/${alchemyKey}`,
 	},
 	supportedChains: [ChainId.Rinkeby],
 };
